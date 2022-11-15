@@ -38,7 +38,7 @@ public:
     };
     
     State start;
-    vector<State> finals;
+    vector<State *> finals;
     NFA(string inp)
     {
         vector<string> vs;
@@ -100,103 +100,89 @@ public:
 
         if(oper.size()==1 && oper[0]=='+')
         {
-            vector<NFA> nfas;
-            nfas.push_back(NFA(vs[0]));
-            nfas.push_back(NFA(vs[1]));
+            
+            NFA* nfa0 = new NFA(vs[0]);
+            // cout << nfa0->finals[0]->name <<"$$$" <<'\n';
+            NFA* nfa1 = new NFA(vs[1]);
+            // cout<< &(nfa0->finals[0]->name)<<"<>"<<endl;
+            // cout<< &(nfa1->finals[0]->name)<<"><"<<endl;
+            // cout<< &(nfa0->finals[0]->trFn)<<"<>"<<endl;
+            // cout<< &(nfa1->finals[0]->trFn)<<"><"<<endl;
+            // cout << nfa0->finals[0]->name <<"@@@" <<'\n';
+            // cout << nfa1->finals[0]->name <<'$' <<'\n';
+            // cout << nfa0->finals[0]->name <<'$' <<nfa1->finals[0]->name <<'\n';
+
             map<char,vector<State> > trFn_;
-            for(NFA eachnfa:nfas)
+            trFn_['#'].push_back(nfa0->start);
+            trFn_['#'].push_back(nfa1->start);
+            
+            State* newstate = new State((nfctr++),trFn_);
+            start = *newstate;
+
+            cout << nfa0->finals[0]->name <<'$' <<nfa1->finals[0]->name <<'\n';
+            cout << nfa0->finals[0]->name <<'$' <<nfa1->finals[0]->name <<'\n';
+            
+            for(State* eachfinal: nfa0->finals)
             {
-                trFn_['#'].push_back(eachnfa.start);
+                finals.push_back(eachfinal);
             }
-            State newstate = State((nfctr++),trFn_);
-            start = newstate;
-            for(NFA eachnfa:nfas)
+            for(State* eachfinal: nfa1->finals)
             {
-                for(State eachfinal: eachnfa.finals)
-                {
-                    finals.push_back(eachfinal);
-                }
+                finals.push_back(eachfinal);
             }
+            
+            cout<<"inp="<<inp<<'\n';
+            this->printNFA();
+            cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
         else if(oper.size()==1 && oper[0]=='.')
         {
-            NFA nfa0(vs[0]);
-            NFA nfa1(vs[1]);
-            cout<<"nfa0\n";nfa0.printNFA();cout<<'\n';
-            cout<<"nfa1\n";nfa1.printNFA();cout<<'\n';
+            NFA* nfa0 = new NFA(vs[0]);
+            NFA* nfa1 = new NFA(vs[1]);
+            // cout<<"nfa0\n";nfa0->printNFA();cout<<'\n';
+            // cout<<"nfa1\n";nfa1->printNFA();cout<<'\n';
 
-            for(int i=0;i<(nfa0.finals).size();i++)
+            for(int i=0;i<(nfa0->finals).size();i++)
             {
-                ((nfa0.finals)[i].trFn)['#'].push_back(nfa1.start);
+                ((nfa0->finals)[i]->trFn)['#'].push_back(nfa1->start);
             }
             cout<<"'#' := ";
-            for(auto s:((nfa0.finals)[0].trFn)['#'])
+            for(auto s:((nfa0->finals)[0]->trFn)['#'])
             {
                 cout<<' '<<s.name;
             }
+            cout<<'\n';
             // nfa0.finals.clear();
-            start = nfa0.start;
-            for(State &eachfinal: nfa1.finals)
+            start = nfa0->start;
+            for(State* eachfinal: nfa1->finals)
             {
                 finals.push_back(eachfinal);
             }
-            cout<<"................(*this)\n";(*this).printNFA();cout<<'\n';
+            cout<<"inp="<<inp<<'\n';
+            this->printNFA();
+            cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
-        /* 
-        else if(oper.size()==1 && oper[0]=='.')
-        {
-            cout<<"in else if(oper.size()==1 && oper[0]=='.')\n";
-            vector<NFA> nfas;
-            nfas.push_back(NFA(vs[0]));
-            nfas.push_back(NFA(vs[1]));
-            cout<<"nfas[0]\n";
-            nfas[0].printNFA();
-            cout<<"\n\nnfas[1]\n";
-            nfas[1].printNFA();
-            cout<<"\n\nnfas_printed\n\n";
-            for(int i=0;i<(nfas[0].finals).size();i++)
-            {
-                ((nfas[0].finals)[i].trFn)['#'].push_back(nfas[1].start);
-                
-            }
-            cout<<"\n\ncheck..\n\n";
-            cout<<"is empty"<<((nfas[0].finals)[0].trFn).empty()<<'\n';
-            cout<<"# := ";
-            for(State s:((nfas[0].finals)[0].trFn)['#'])
-            {
-                cout<<" "<<s.name;
-            }
-            
-            cout<<"\n\nchecked\n\n";
-            start = nfas[0].start;
-            for(State &eachfinal: nfas[1].finals)
-            {
-                finals.push_back(eachfinal);
-            }
-
-            // for(State &eachfinal: nfas[0].finals)
-            // {
-            //     eachfinal.trFn['#'].push_back(nfas[1].start);
-            // }
-        } */
         else if(oper.size()==0)
         {
             map<char,vector<State> > emptytrfn_;
-            State lastState = State((nfctr++),emptytrfn_);
-            finals.push_back(lastState);
+            State* lastState1 = new State((nfctr++),emptytrfn_);
+            finals.push_back(lastState1);
             
+            State* lastState = lastState1;
             for(int i=vs[0].size()-1;i>=0;i--)
             {
                 map<char,vector<State> > emptytrfn_1;
-                emptytrfn_1[vs[0][i]].push_back(lastState);
-                State newState = State((nfctr++),emptytrfn_1);
+                emptytrfn_1[vs[0][i]].push_back(*lastState);
+                State* newState = new State((nfctr++),emptytrfn_1);
 
                 if(i==0)
-                    start=newState;
+                    start=*newState;
                 lastState=newState;
             }
 
-            
+            cout<<"inp="<<inp<<'\n';
+            this->printNFA();
+            cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
         else
         {
@@ -233,8 +219,8 @@ public:
             }
         }
         cout<<"\n\nfinals= ";
-        for(State finalss:finals)
-            cout<<finalss.name<<' ';
+        for(State* finalss:finals)
+            cout<<finalss->name<<' ';
         cout<<'\n';
     }
     ~NFA()
@@ -263,5 +249,6 @@ int main()
     nfctr=0;
     NFA var(inp);
     // var = NFA(inp);
+    cout << "\nPrinting final NFA\n==================\n";
     var.printNFA();
 }
