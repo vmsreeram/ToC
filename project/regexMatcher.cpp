@@ -1,6 +1,48 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+vector<string> parse(string s)
+{
+    vector<string> t;
+    int k = s.find('(');
+    string sf=s.substr(0,k);
+
+    t.push_back(sf);
+    s.pop_back();
+    string s1="";
+    for(int i=k+1;i<=s.size();i++)
+        s1+=s[i];
+
+    if(sf == "star" || sf == "symbol")
+    {
+        t.push_back(s1);
+        return t;
+    }
+
+    int op = 0,loc=-1;
+    for(int i=0;i<s1.size();i++)
+    {
+        if(s1[i]=='(') op++;
+        else if(s1[i]==')') op--;
+        else if(s1[i]==',' && op==0)
+        {
+            assert(loc==-1);            // only one `,` is permitted
+            loc=i;
+        }
+    }
+    assert(loc!=-1);                    // no `,` is not permitted
+    assert(op==0);                      // string must be well formed
+
+    string cur="";
+    for(int i=0;i<loc;i++)cur+=s1[i];
+    t.push_back(cur);
+
+    cur="";
+    for(int i=loc+1;i<s1.size();i++)cur+=s1[i];
+    t.push_back(cur);
+    return t;
+}
+
 int nfctr;
 class NFA
 {
@@ -236,23 +278,15 @@ public:
     }
 };
 
-
-
-
-
-
-string paranthesiser(string s)
-{
-    string t=s;
-    /* TODO */
-    return t;
-}
-
 int main()
 {
     string inp;
     cin >> inp;
-    inp=paranthesiser(inp);
+    vector<string> v = parse(inp);
+    cout << "Parsed\n======\n";
+    for(auto &s:v)cout<<s<<' ';
+    cout<<'\n';
+    return 0;
     nfctr=0;
     NFA var(inp);
     // var = NFA(inp);
