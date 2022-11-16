@@ -129,7 +129,25 @@ public:
             // this->printNFA();
             // cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
-        else if(parsed[0] == "star"){}
+        else if(parsed[0] == "star")
+        {
+            NFA* nfa0 = new NFA(parsed[1]);
+
+            for(int i=0;i<(nfa0->finals).size();i++)
+            {
+                ((nfa0->finals)[i]->trFn)['#'].push_back((nfa0->start));
+            }
+
+            map<char,vector<State *> > trFn_;
+            trFn_['#'].push_back(nfa0->start);
+
+            State* newstate = new State((nfctr++),trFn_);
+            start=newstate;
+
+            for(int i=0;i<(nfa0->finals).size();i++)
+                finals.push_back(nfa0->finals[i]);
+            finals.push_back(newstate);
+        }
         else if(parsed[0] == "symbol")
         {
             map<char,vector<State *> > emptytrfn_;
@@ -155,6 +173,10 @@ public:
     {
         cout<<"---NFA---\n";
         cout << " start\n=====\n";
+
+        set<int> visited;
+        visited.insert(start->name);
+
         start->printState();
         cout<<"\n\n";
         queue<State *> q;
@@ -167,16 +189,22 @@ public:
         {
             State* top = q.front();
             q.pop();
+
+            if(visited.find(top->name)!=visited.end())
+                continue;
+            visited.insert(top->name);
+
             top->printState();
             for(auto &x : top->trFn)
             {
                 for(State * &ss:x.second)
                 {
-                    q.push(ss);
+                    if(visited.find(ss->name)==visited.end())
+                        q.push(ss);
                 }
             }
         }
-        cout<<"\n\nfinals= ";
+        cout<<"\n\nfinals = ";
         for(State* finalss:finals)
             cout<<finalss->name<<' ';
         cout<<'\n';
