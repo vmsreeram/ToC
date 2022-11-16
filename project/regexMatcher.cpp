@@ -62,12 +62,12 @@ public:
                 }
                 vs.push_back(cur);
                 
-                cout<<"vs\n";
-                for(string ss:vs)
-                {
-                    cout<<ss<<", ";
-                }
-                cout<<".\n";
+                // cout<<"vs\n";
+                // for(string ss:vs)
+                // {
+                //     cout<<ss<<", ";
+                // }
+                // cout<<".\n";
                 break;
             }
         }
@@ -119,8 +119,8 @@ public:
             State* newstate = new State((nfctr++),trFn_);
             start = newstate;
 
-            cout << nfa0->finals[0]->name <<'$' <<nfa1->finals[0]->name <<'\n';
-            cout << nfa0->finals[0]->name <<'$' <<nfa1->finals[0]->name <<'\n';
+            // cout << nfa0->finals[0]->name <<'$' <<nfa1->finals[0]->name <<'\n';
+            // cout << nfa0->finals[0]->name <<'$' <<nfa1->finals[0]->name <<'\n';
             
             for(State* eachfinal: nfa0->finals)
             {
@@ -131,9 +131,9 @@ public:
                 finals.push_back(eachfinal);
             }
             
-            cout<<"inp="<<inp<<'\n';
-            this->printNFA();
-            cout<<"^^^^^^^^^^^^^^^^\n\n";
+            // cout<<"inp="<<inp<<'\n';
+            // this->printNFA();
+            // cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
         else if(oper.size()==1 && oper[0]=='.')
         {
@@ -146,27 +146,27 @@ public:
             {
                 ((nfa0->finals)[i]->trFn)['#'].push_back((nfa1->start));
             }
-            cout << "(nfa0->finals[0])->name="<<(nfa0->finals[0])->name<<'\n';
-            cout << "(nfa0->finals[0])="<<nfa0->finals[0]<<'\n';
-            // cout << (nfa0->finals[0])<<"<>";
-            cout<<"'#' := ";
-            for(State* s:((nfa0->finals)[0]->trFn)['#'])
-            {
-                cout<<' '<<s->name;
-            }
-            cout<<'\n';
+            // cout << "(nfa0->finals[0])->name="<<(nfa0->finals[0])->name<<'\n';
+            // cout << "(nfa0->finals[0])="<<nfa0->finals[0]<<'\n';
+            // // cout << (nfa0->finals[0])<<"<>";
+            // cout<<"'#' := ";
+            // for(State* s:((nfa0->finals)[0]->trFn)['#'])
+            // {
+            //     cout<<' '<<s->name;
+            // }
+            // cout<<'\n';
             // nfa0.finals.clear();
             start = nfa0->start;
             for(State* eachfinal: nfa1->finals)
             {
                 finals.push_back(eachfinal);
             }
-            cout<<&(nfa0->start->trFn['a'][0]);
-            start->trFn['a'][0]->printState();cout<<"[]";
-            cout << start->name;
-            cout<<"inp="<<inp<<'\n';
-            this->printNFA();
-            cout<<"^^^^^^^^^^^^^^^^\n\n";
+            // cout<<&(nfa0->start->trFn['a'][0]);
+            // start->trFn['a'][0]->printState();cout<<"[]";
+            // cout << start->name;
+            // cout<<"inp="<<inp<<'\n';
+            // this->printNFA();
+            // cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
         else if(oper.size()==0)
         {
@@ -186,9 +186,9 @@ public:
                 lastState=newState;
             }
 
-            cout<<"inp="<<inp<<'\n';
-            this->printNFA();
-            cout<<"^^^^^^^^^^^^^^^^\n\n";
+            // cout<<"inp="<<inp<<'\n';
+            // this->printNFA();
+            // cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
         else
         {
@@ -211,11 +211,11 @@ public:
         {
             State* top = q.front();
             q.pop();
-            if(top->name==0)
-            {
-                cout << "top->name="<<top->name<<'\n';
-                cout << "top = "<<(top)<<'\n';
-            }
+            // if(top->name==0)
+            // {
+            //     cout << "top->name="<<top->name<<'\n';
+            //     cout << "top = "<<(top)<<'\n';
+            // }
             top->printState();
             for(auto &x : top->trFn)
             {
