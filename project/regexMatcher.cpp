@@ -9,14 +9,14 @@ public:
     {
     public:
         int name;                                // the name of the state
-        map<char,vector<State> > trFn;           // trFn[s] will be the vector of states, alphabet s will lead to from name
+        map<char,vector<State *> > trFn;           // trFn[s] will be the vector of states, alphabet s will lead to from name
   
         State()
         {
             this->name=0;
-            this->trFn=map<char,vector<State> >();
+            this->trFn=map<char,vector<State *> >();
         }
-        State(int name_,map<char,vector<State> > trFn_)
+        State(int name_,map<char,vector<State *> > trFn_)
         {
             this->name=name_;
             this->trFn=trFn_;
@@ -27,9 +27,9 @@ public:
             for(auto x:trFn)
             {
                 cout << x.first << " := ";
-                for(State y:x.second)
+                for(State* y:x.second)
                 {
-                    cout << y.name << ' ';
+                    cout << y->name << ' ';
                 }
                 cout<<'\n';
             }
@@ -37,7 +37,7 @@ public:
         }
     };
     
-    State start;
+    State* start;
     vector<State *> finals;
     NFA(string inp)
     {
@@ -112,12 +112,12 @@ public:
             // cout << nfa1->finals[0]->name <<'$' <<'\n';
             // cout << nfa0->finals[0]->name <<'$' <<nfa1->finals[0]->name <<'\n';
 
-            map<char,vector<State> > trFn_;
-            trFn_['#'].push_back(nfa0->start);
-            trFn_['#'].push_back(nfa1->start);
+            map<char,vector<State *> > trFn_;
+            trFn_['#'].push_back((nfa0->start));
+            trFn_['#'].push_back((nfa1->start));
             
             State* newstate = new State((nfctr++),trFn_);
-            start = *newstate;
+            start = newstate;
 
             cout << nfa0->finals[0]->name <<'$' <<nfa1->finals[0]->name <<'\n';
             cout << nfa0->finals[0]->name <<'$' <<nfa1->finals[0]->name <<'\n';
@@ -144,12 +144,15 @@ public:
 
             for(int i=0;i<(nfa0->finals).size();i++)
             {
-                ((nfa0->finals)[i]->trFn)['#'].push_back(nfa1->start);
+                ((nfa0->finals)[i]->trFn)['#'].push_back((nfa1->start));
             }
+            cout << "(nfa0->finals[0])->name="<<(nfa0->finals[0])->name<<'\n';
+            cout << "(nfa0->finals[0])="<<nfa0->finals[0]<<'\n';
+            // cout << (nfa0->finals[0])<<"<>";
             cout<<"'#' := ";
-            for(auto s:((nfa0->finals)[0]->trFn)['#'])
+            for(State* s:((nfa0->finals)[0]->trFn)['#'])
             {
-                cout<<' '<<s.name;
+                cout<<' '<<s->name;
             }
             cout<<'\n';
             // nfa0.finals.clear();
@@ -158,25 +161,28 @@ public:
             {
                 finals.push_back(eachfinal);
             }
+            cout<<&(nfa0->start->trFn['a'][0]);
+            start->trFn['a'][0]->printState();cout<<"[]";
+            cout << start->name;
             cout<<"inp="<<inp<<'\n';
             this->printNFA();
             cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
         else if(oper.size()==0)
         {
-            map<char,vector<State> > emptytrfn_;
+            map<char,vector<State *> > emptytrfn_;
             State* lastState1 = new State((nfctr++),emptytrfn_);
             finals.push_back(lastState1);
             
             State* lastState = lastState1;
             for(int i=vs[0].size()-1;i>=0;i--)
             {
-                map<char,vector<State> > emptytrfn_1;
-                emptytrfn_1[vs[0][i]].push_back(*lastState);
+                map<char,vector<State *> > emptytrfn_1;
+                emptytrfn_1[vs[0][i]].push_back(lastState);
                 State* newState = new State((nfctr++),emptytrfn_1);
 
                 if(i==0)
-                    start=*newState;
+                    start=newState;
                 lastState=newState;
             }
 
@@ -193,26 +199,27 @@ public:
     {
         cout<<"---NFA---\n";
         cout << " start\n=====\n";
-        start.printState();
+        start->printState();
         cout<<"\n\n";
-        queue<State> q;
-        for(auto x : start.trFn)
+        queue<State *> q;
+        for(auto &x : start->trFn)
         {
-            for(State ss:x.second)
+            for(State * &ss:x.second)
                 q.push(ss);
         }
         while (!q.empty())
         {
-            State top = q.front();
+            State* top = q.front();
             q.pop();
-            // if(top.name==0)
-            // {
-            //     cout<<"0 trfn empty="<<top.trFn.empty()<<'\n';
-            // }
-            top.printState();
-            for(auto x : top.trFn)
+            if(top->name==0)
             {
-                for(State ss:x.second)
+                cout << "top->name="<<top->name<<'\n';
+                cout << "top = "<<(top)<<'\n';
+            }
+            top->printState();
+            for(auto &x : top->trFn)
+            {
+                for(State * &ss:x.second)
                 {
                     q.push(ss);
                 }
