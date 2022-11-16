@@ -215,6 +215,59 @@ public:
     }
 };
 
+int dfctr;
+class DFA
+{
+public:
+    class State
+    {
+    public:
+        set<int> name;                             // the name of the state
+        map<char,State *> trFn;                    // trFn[s] will be the state, alphabet s will lead to from name
+  
+        State()
+        {
+            this->name=set<int>();
+            this->trFn=map<char,State *>();
+        }
+        State(set<int> name_,map<char,State *> trFn_)
+        {
+            this->name=name_;
+            this->trFn=trFn_;
+        }
+        void printState()
+        {
+            cout << "\n... [DFA]name={ ";
+            if(name.size()!=0)
+                for(int names:name)
+                    cout <<names <<' ';
+            cout<<"}\ntrfn\n=========\n";
+            for(auto x:trFn)
+            {
+                cout << x.first << " := { ";
+                if(x.second->name .size()!=0)
+                for(int names:x.second->name)
+                    cout <<names <<' ';
+                cout << "}\n";
+            }
+            cout << "``` [DFA]"<<'\n';
+        }
+    };
+    State* start;
+    vector<State*> finals;
+
+    DFA()
+    {
+        start = new State();
+        finals = vector<State*>();
+    }
+
+    // DFA(NFA* nfa)
+    // {
+
+    // }
+};
+
 int main()
 {
     string inp;
