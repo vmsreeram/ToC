@@ -223,49 +223,67 @@ public:
     {
     public:
         set<int> name;                             // the name of the state
-        map<char,State *> trFn;                    // trFn[s] will be the state, alphabet s will lead to from name
-  
+
         State()
         {
             this->name=set<int>();
-            this->trFn=map<char,State *>();
         }
         State(set<int> name_,map<char,State *> trFn_)
         {
             this->name=name_;
-            this->trFn=trFn_;
         }
         void printState()
         {
-            cout << "\n... [DFA]name={ ";
+            cout << '{';
             if(name.size()!=0)
-                for(int names:name)
-                    cout <<names <<' ';
-            cout<<"}\ntrfn\n=========\n";
-            for(auto x:trFn)
-            {
-                cout << x.first << " := { ";
-                if(x.second->name .size()!=0)
-                for(int names:x.second->name)
-                    cout <<names <<' ';
-                cout << "}\n";
-            }
-            cout << "``` [DFA]"<<'\n';
+                for(int i:name) cout << i << ' ';
+            cout << '}';
         }
     };
     State* start;
     vector<State*> finals;
+    map<pair<State*,char>,State*> delta;
 
     DFA()
     {
         start = new State();
         finals = vector<State*>();
+        delta = map<pair<State*,char>,State*>();
     }
 
     // DFA(NFA* nfa)
     // {
 
     // }
+    void printDFA()
+    {
+        cout << "... [DFA]\n";
+        cout << "Start  : ";start->printState();cout<<'\n';
+        cout << "Finals : \n";
+        if(finals.empty())cout << "<empty>\n";
+        else
+        {
+            for(auto s:finals)
+            {
+                s->printState();
+                cout << "; \n";
+            }
+            cout << '\n';
+        }
+
+        cout << "\ndelta\n=====\n";
+        if(delta.empty())cout << "<empty>\n";
+        else
+        for(auto x:delta)
+        {
+            x.first.first->printState();
+            cout << ' ';
+            cout << '\''<<x.first.second<< '\''<<" --> ";
+            x.second->printState();
+            cout <<'\n';
+        }
+        cout << "``` [DFA]\n";
+    }
 };
 
 int main()
