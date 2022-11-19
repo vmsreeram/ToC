@@ -243,18 +243,43 @@ public:
     State* start;
     vector<State*> finals;
     map<pair<State*,char>,State*> delta;
+    map<int, State*> int2Statestar;
 
     DFA()
     {
         start = new State();
         finals = vector<State*>();
         delta = map<pair<State*,char>,State*>();
+        int2Statestar = map<int, State*>();
     }
 
-    // DFA(NFA* nfa)
-    // {
+    DFA(NFA* nfa)
+    {
+        //
+        set<int> visited;
+        visited.insert(nfa->start->name);
 
-    // }
+        ///start
+
+        queue<NFA::State *> q;
+        for(auto &x : nfa->start->trFn)
+        {
+            for(NFA::State * &ss:x.second)
+                q.push(ss);
+        }
+        while (!q.empty())
+        {
+            NFA::State* top = q.front();
+            q.pop();
+
+            ///
+
+        }
+
+        ///finals
+
+        //
+    }
     void printDFA()
     {
         cout << "... [DFA]\n";
@@ -292,6 +317,7 @@ int main()
     cin >> inp;
     nfctr=0;
     NFA var(inp);
-    cout << "\nPrinting final NFA\n==================\n";
-    var.printNFA();
+    // cout << "\nPrinting final NFA\n==================\n";
+    // var.printNFA();
+    DFA _dfa_(&var);
 }
