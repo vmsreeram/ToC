@@ -393,18 +393,38 @@ public:
     }
 };
 
+bool checkString(DFA* dfa, string &s)
+{
+    if(s.size() == 0)
+    {
+        return (dfa->finals.find(dfa->start)!=dfa->finals.end());
+    }
+    set<int> cur = (dfa->start);
+    for(int i=0;i<s.size();i++)
+    {
+        cur = dfa->delta[make_pair(cur,s[i])];
+    }
+    return (dfa->finals.find(cur)!=dfa->finals.end());
+}
+
 int main()
 {
     string inp;
     cin >> inp;
     nfctr=0;
     NFA var(inp);
-    cout << "\nPrinting final NFA\n==================\n";
-    var.printNFA();
     DFA _dfa_(&var);
-    cout << "\n\n\n\nafterDFA, Printing final NFA\n==================\n";
-    var.printNFA();
-    cout << "\n\n\n\nPrinting final DFA\n==================\n";
-    _dfa_.printDFA();
-    
+
+    cout << "Num of tests : ";
+    int nTests = 1; 
+    cin >> nTests;
+    while(nTests--) {
+        cout <<'[' << nTests << ']' << " Enter the string to test : ";
+        string s; cin>>s;
+        if(checkString(&_dfa_,s))
+        cout << "Yes\n";
+        else
+            cout << "No\n";
+    }
+
 }
