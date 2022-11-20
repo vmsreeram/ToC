@@ -209,6 +209,41 @@ public:
             cout<<finalss->name<<' ';
         cout<<'\n';
     }
+    set<char> findSigma()
+    {
+        set<char> ans;
+        set<int> visited;
+        visited.insert(start->name);
+        queue<State *> q;
+        for(auto &x : start->trFn)
+        {
+            ans.insert(x.first);
+            for(State * &ss:x.second)
+                q.push(ss);
+        }
+        while (!q.empty())
+        {
+            State* top = q.front();
+            q.pop();
+
+            if(visited.find(top->name)!=visited.end())
+                continue;
+            visited.insert(top->name);
+
+            for(auto &x : top->trFn)
+            {
+                ans.insert(x.first);
+                for(State * &ss:x.second)
+                {
+                    if(visited.find(ss->name)==visited.end())
+                        q.push(ss);
+                }
+            }
+        }
+        if(ans.count('#')!=0)
+            ans.erase('#');
+        return ans;
+    }
     ~NFA()
     {
         /* ... */
@@ -228,7 +263,7 @@ public:
         {
             this->name=set<int>();
         }
-        State(set<int> name_,map<char,State *> trFn_)
+        State(set<int> name_)
         {
             this->name=name_;
         }
@@ -240,41 +275,74 @@ public:
             cout << '}';
         }
     };
+
     State* start;
     vector<State*> finals;
     map<pair<State*,char>,State*> delta;
-    map<int, State*> int2Statestar;
+    // map<set<int>, State*> setint2Statestar;
+    set<char> Sigma;
 
     DFA()
     {
         start = new State();
         finals = vector<State*>();
         delta = map<pair<State*,char>,State*>();
-        int2Statestar = map<int, State*>();
+        // setint2Statestar = map<set<int>, State*>();
+    }
+
+    set<NFA::State*> getEpsilonReachableStates(NFA::State* cur)
+    {
+        set<NFA::State*> v;
+        v.insert(cur);
+        queue<NFA::State *> q;
+        q.push(cur);
+        while(!q.empty())
+        {
+            NFA::State * top = q.front();
+            q.pop();
+            if(top->trFn['#'].size()!=0)
+                for(auto s : top->trFn['#'])
+                {
+                    if(v.find(s)==v.end())
+                    {
+                        v.insert(s);
+                        q.push(s);
+                    }
+                }
+        }
+        return v;
     }
 
     DFA(NFA* nfa)
     {
+        Sigma = nfa->findSigma();
+        // set<set<int> > visited;
+        queue<set<NFA::State* > > queueue;
         //
-        set<int> visited;
-        visited.insert(nfa->start->name);
+        set<NFA::State*> start_states=getEpsilonReachableStates(nfa->start);
+        set<int> start_statess;
+        for(auto &ss:start_states)
+        {
+            start_statess.insert(ss->name);
+        }
+        start = new State(start_statess);
+        // visited.insert(start->name);
+        queueue.push(start_states);
+        while(!queueue.empty())
+        {
+            set<NFA::State* > top = queueue.front();
+            for(char ch:Sigma)
+            {
+                set<int> nextState_int;
+                for(auto eachState : top)
+                    nextState_int.insert(eachState->name);
+                    
+                State* nextState = new State(nextState_int);
+            }
+        }
 
         ///start
 
-        queue<NFA::State *> q;
-        for(auto &x : nfa->start->trFn)
-        {
-            for(NFA::State * &ss:x.second)
-                q.push(ss);
-        }
-        while (!q.empty())
-        {
-            NFA::State* top = q.front();
-            q.pop();
-
-            ///
-
-        }
 
         ///finals
 
