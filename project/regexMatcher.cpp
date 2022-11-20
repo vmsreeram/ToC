@@ -104,10 +104,6 @@ public:
             {
                 finals.push_back(eachfinal);
             }
-            
-            // cout<<"inp="<<inp<<'\n';
-            // this->printNFA();
-            // cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
         else if(parsed[0] == "concat")
         {
@@ -124,10 +120,6 @@ public:
             {
                 finals.push_back(eachfinal);
             }
-
-            // cout<<"inp="<<inp<<'\n';
-            // this->printNFA();
-            // cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
         else if(parsed[0] == "star")
         {
@@ -161,11 +153,6 @@ public:
             State* newState = new State((nfctr++),emptytrfn_1);
 
             start=newState;
-            
-
-            // cout<<"inp="<<inp<<'\n';
-            // this->printNFA();
-            // cout<<"^^^^^^^^^^^^^^^^\n\n";
         }
     }
     
@@ -243,10 +230,6 @@ public:
         if(ans.count('#')!=0)
             ans.erase('#');
         return ans;
-    }
-    ~NFA()
-    {
-        /* ... */
     }
 };
 
@@ -360,7 +343,6 @@ public:
             }
 
         }
-        set<NFA::State*> starts = epsilonReachableStates(nfa->start);
     }
     void printDFA()
     {
@@ -432,5 +414,10 @@ int main()
 {
     int nt;cin>>nt;while(nt--)
         testcase();
-
+    /**
+     * @brief Testing
+     * 
+     * can use `diff` in command line for testing
+     * 
+     */
 }
