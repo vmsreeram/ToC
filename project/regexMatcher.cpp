@@ -407,7 +407,7 @@ bool checkString(DFA* dfa, string &s)
     return (dfa->finals.find(cur)!=dfa->finals.end());
 }
 
-int main()
+void testcase()
 {
     string inp;
     cin >> inp;
@@ -415,16 +415,22 @@ int main()
     NFA var(inp);
     DFA _dfa_(&var);
 
-    cout << "Num of tests : ";
+    // cout << "Num of tests : ";
     int nTests = 1; 
-    cin >> nTests;
+    // cin >> nTests;
     while(nTests--) {
-        cout <<'[' << nTests << ']' << " Enter the string to test : ";
+        // cout <<'[' << nTests << ']' << " Enter the string to test : ";
         string s; cin>>s;
         if(checkString(&_dfa_,s))
         cout << "Yes\n";
         else
             cout << "No\n";
     }
+}
+
+int main()
+{
+    int nt;cin>>nt;while(nt--)
+        testcase();
 
 }
