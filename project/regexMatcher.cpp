@@ -486,7 +486,7 @@ public:
         int oldStart = set2int[dfa->start];
         cerr << "oldStart = "<<oldStart<<'\n';
 
-        start = clpsd[oldStart];/////////////////////
+        start = clpsd[find_set(oldStart)];/////////////////////
         cerr << "start = ";printState(start);cerr<<'\n';
 
         set<int> oldFinals;
@@ -496,14 +496,14 @@ public:
         }
         for(int s:oldFinals)
         {
-            finals.insert(clpsd[s]);/////////////////////
+            finals.insert(clpsd[find_set(s)]);/////////////////////
         }
 
 
         set<pair<pair<set<int>,char>,set<int> > > newDelta;
         for(pair<pair<set<int>,char>,set<int> > pr:dfa->delta)
         {
-            newDelta.insert(make_pair(make_pair(clpsd[set2int[pr.first.first]],pr.first.second), clpsd[set2int[pr.second]]));
+            newDelta.insert(make_pair(make_pair(clpsd[find_set(set2int[pr.first.first])],pr.first.second), clpsd[find_set(set2int[pr.second])]));
         }
         for(pair<pair<set<int>,char>,set<int> > pr:newDelta)
         {
