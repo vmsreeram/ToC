@@ -248,6 +248,7 @@ public:
     set<set<int> > finals;
     map<pair<set<int>,char>,set<int> > delta;
     set<char> Sigma;
+    vector<set<int> > States;
 
     DFA()
     {
@@ -343,7 +344,182 @@ public:
             }
 
         }
+        set<set<int> > states_set;
+        if(!((delta).empty()))
+        for(auto pr:delta)
+        {
+            states_set.insert(pr.first.first);
+        }
+
+        for(auto i:states_set)States.push_back(i);
     }
+    
+    // dsu https://cp-algorithms.com/data_structures/disjoint_set_union.html
+    #define MAXN 5000
+    vector<int> lst[MAXN];
+    int parent[MAXN];
+    void make_set(int v) {
+        lst[v] = vector<int>(1, v);
+        parent[v] = v;
+    }
+    int find_set(int v) {
+        return parent[v];
+    }
+    void union_sets(int a, int b) {
+        a = find_set(a);
+        b = find_set(b);
+        if (a != b) {
+            if (lst[a].size() < lst[b].size())
+                swap(a, b);
+            while (!lst[b].empty()) {
+                int v = lst[b].back();
+                lst[b].pop_back();
+                parent[v] = a;
+                lst[a].push_back (v);
+            }
+        }
+    }
+    // 
+
+    DFA(DFA* dfa)
+    {
+        // cerr << "inside DFA(DFA* dfa)\n";
+
+        int sz = dfa->States.size();
+        // cerr << "sz="<<sz<<"\n";
+
+        vector<vector<bool> > mat(sz,vector<bool>(sz,false));
+        map<set<int>,int> set2int;
+        map<int,set<int>> int2set;
+        for(int i=0;i<sz;i++)
+        {
+            set2int[dfa->States[i]]=i;
+            int2set[i]=dfa->States[i];
+        }
+        for(int i=0;i<sz;i++)
+        {
+            for(int j=i+1;j<sz;j++)
+            {
+                if(
+                    ((dfa->finals.find(int2set[i])!=dfa->finals.end())&&(dfa->finals.find(int2set[j])==dfa->finals.end()))
+                    ||
+                    ((dfa->finals.find(int2set[i])==dfa->finals.end())&&(dfa->finals.find(int2set[j])!=dfa->finals.end()))
+                  )
+                {
+                    mat[i][j]=true;
+                }
+            }
+        }
+        // cerr << "MAT___1\n";
+        // for(int i=0;i<sz;i++)
+        // {
+        //     for(int j=0;j<sz;j++)
+        //     {
+        //         cerr << mat[i][j] << ' ';
+        //     }
+        //     cerr <<'\n';
+        // }
+        // cerr<<'\n';
+
+        bool ok=true;
+        while(ok)
+        {
+            ok=false;
+            for(int i=0;i<sz;i++)
+            {
+                for(int j=i+1;j<sz;j++)
+                {
+                    if(mat[i][j]==true)continue;
+                    for(char ch:dfa->Sigma)
+                    {
+                        int I,J;
+                        I = set2int[dfa->delta[make_pair(int2set[i],ch)]];
+                        J = set2int[dfa->delta[make_pair(int2set[j],ch)]];
+                        if(mat[I][J]==true)
+                        {
+                            mat[i][j]=true;
+                            ok=true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // cerr << "MAT___2\n";
+        // for(int i=0;i<sz;i++)
+        // {
+        //     for(int j=0;j<sz;j++)
+        //     {
+        //         cerr << mat[i][j] << ' ';
+        //     }
+        //     cerr <<'\n';
+        // }
+        // cerr<<'\n';
+
+        for(int i=0;i<sz;i++)
+            make_set(i);
+        for(int i=0;i<sz;i++)
+        {
+            for(int j=i+1;j<sz;j++)
+            {
+                if(mat[i][j]==false)
+                {
+                    union_sets(i,j);
+                }
+            }
+        }
+
+        map<int,set<int> >clpsd;
+        for(int i=0;i<sz;i++)
+        {
+            clpsd[find_set(i)].insert(i);
+        }
+
+        // cerr<<"clpsd__\n";
+        // for(auto clp:clpsd)
+        // {
+        //     cerr << clp.first << " -=-> ";printState(clp.second); cerr<<'\n';
+        // }
+        // cerr<<'\n';
+
+
+        int oldStart = set2int[dfa->start];
+        // cerr << "oldStart = "<<oldStart<<'\n';
+
+        start = clpsd[oldStart];/////////////////////
+        // cerr << "start = ";printState(start);cerr<<'\n';
+
+        set<int> oldFinals;
+        for(auto s:dfa->finals)
+        {
+            oldFinals.insert(set2int[s]);
+        }
+        for(int s:oldFinals)
+        {
+            finals.insert(clpsd[s]);/////////////////////
+        }
+
+
+        set<pair<pair<set<int>,char>,set<int> > > newDelta;
+        for(pair<pair<set<int>,char>,set<int> > pr:dfa->delta)
+        {
+            newDelta.insert(make_pair(make_pair(clpsd[set2int[pr.first.first]],pr.first.second), clpsd[set2int[pr.second]]));
+        }
+        for(pair<pair<set<int>,char>,set<int> > pr:newDelta)
+        {
+            delta[pr.first]=pr.second;
+        }
+
+        Sigma = dfa->Sigma;
+
+
+        if(!((delta).empty()))
+        for(auto pr:delta)
+        {
+            States.push_back(pr.first.first);
+        }
+    }
+
     void printDFA()
     {
         cout << "... [DFA]\n";
@@ -396,6 +572,16 @@ void testcase()
     nfctr=0;
     NFA var(inp);
     DFA _dfa_(&var);
+    // cout << "_dfa_ \n";
+    // _dfa_.printDFA();
+    // cout << "$$$$$ \n\n";
+    DFA __dfa__(&_dfa_);
+    // cout << "_dfa_ \n";
+    // _dfa_.printDFA();
+    // cout << "$$$$$ \n\n";
+    // cout << "__dfa__ \n";
+    // __dfa__.printDFA();
+    // cout << "$$$$$ \n\n";
 
     // cout << "Num of tests : ";
     int nTests = 1; 
@@ -403,10 +589,13 @@ void testcase()
     while(nTests--) {
         // cout <<'[' << nTests << ']' << " Enter the string to test : ";
         string s; cin>>s;
-        if(checkString(&_dfa_,s))
-        cout << "Yes\n";
+        bool ans = checkString(&__dfa__,s);
+        if(ans)
+        cout << "Yes";
         else
-            cout << "No\n";
+            cout << "No";
+        if(ans == checkString(&_dfa_,s))cout << '\n';
+        // else cout <<" <-- Mismatch found\n";
     }
 }
 

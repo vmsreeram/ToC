@@ -34,3 +34,4 @@ Then you can test the program by either
     ```bash
     ./regexMatcher > path/to/outputfile
     ```
+
