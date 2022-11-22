@@ -383,10 +383,10 @@ public:
 
     DFA(DFA* dfa)
     {
-        // cerr << "inside DFA(DFA* dfa)\n";
+        cerr << "inside DFA(DFA* dfa)\n";
 
         int sz = dfa->States.size();
-        // cerr << "sz="<<sz<<"\n";
+        cerr << "sz="<<sz<<"\n";
 
         vector<vector<bool> > mat(sz,vector<bool>(sz,false));
         map<set<int>,int> set2int;
@@ -410,16 +410,16 @@ public:
                 }
             }
         }
-        // cerr << "MAT___1\n";
-        // for(int i=0;i<sz;i++)
-        // {
-        //     for(int j=0;j<sz;j++)
-        //     {
-        //         cerr << mat[i][j] << ' ';
-        //     }
-        //     cerr <<'\n';
-        // }
-        // cerr<<'\n';
+        cerr << "MAT___1\n";
+        for(int i=0;i<sz;i++)
+        {
+            for(int j=0;j<sz;j++)
+            {
+                cerr << mat[i][j] << ' ';
+            }
+            cerr <<'\n';
+        }
+        cerr<<'\n';
 
         bool ok=true;
         while(ok)
@@ -445,16 +445,16 @@ public:
             }
         }
 
-        // cerr << "MAT___2\n";
-        // for(int i=0;i<sz;i++)
-        // {
-        //     for(int j=0;j<sz;j++)
-        //     {
-        //         cerr << mat[i][j] << ' ';
-        //     }
-        //     cerr <<'\n';
-        // }
-        // cerr<<'\n';
+        cerr << "MAT___2\n";
+        for(int i=0;i<sz;i++)
+        {
+            for(int j=0;j<sz;j++)
+            {
+                cerr << mat[i][j] << ' ';
+            }
+            cerr <<'\n';
+        }
+        cerr<<'\n';
 
         for(int i=0;i<sz;i++)
             make_set(i);
@@ -475,19 +475,19 @@ public:
             clpsd[find_set(i)].insert(i);
         }
 
-        // cerr<<"clpsd__\n";
-        // for(auto clp:clpsd)
-        // {
-        //     cerr << clp.first << " -=-> ";printState(clp.second); cerr<<'\n';
-        // }
-        // cerr<<'\n';
+        cerr<<"clpsd__\n";
+        for(auto clp:clpsd)
+        {
+            cerr << clp.first << " -=-> ";printState(clp.second); cerr<<'\n';
+        }
+        cerr<<'\n';
 
 
         int oldStart = set2int[dfa->start];
-        // cerr << "oldStart = "<<oldStart<<'\n';
+        cerr << "oldStart = "<<oldStart<<'\n';
 
         start = clpsd[oldStart];/////////////////////
-        // cerr << "start = ";printState(start);cerr<<'\n';
+        cerr << "start = ";printState(start);cerr<<'\n';
 
         set<int> oldFinals;
         for(auto s:dfa->finals)
@@ -576,12 +576,12 @@ void testcase()
     // _dfa_.printDFA();
     // cout << "$$$$$ \n\n";
     DFA __dfa__(&_dfa_);
-    // cout << "_dfa_ \n";
-    // _dfa_.printDFA();
-    // cout << "$$$$$ \n\n";
-    // cout << "__dfa__ \n";
-    // __dfa__.printDFA();
-    // cout << "$$$$$ \n\n";
+    cout << "_dfa_ \n";
+    _dfa_.printDFA();
+    cout << "$$$$$ \n\n";
+    cout << "__dfa__ \n";
+    __dfa__.printDFA();
+    cout << "$$$$$ \n\n";
 
     // cout << "Num of tests : ";
     int nTests = 1; 
@@ -595,7 +595,7 @@ void testcase()
         else
             cout << "No";
         if(ans == checkString(&_dfa_,s))cout << '\n';
-        // else cout <<" <-- Mismatch found\n";
+        else cout <<" <-- Mismatch found\n";
     }
 }
 
