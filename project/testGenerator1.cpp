@@ -29,16 +29,17 @@ std::vector<std::string> get_all_words(int length)
   }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
     vector<string> vs;
-    for(int len=1;len<=5;len++)
+    for(int len=1;len<=6;len++)
         for(auto s:get_all_words(len))
             vs.push_back(s);
 
     cout << vs.size() <<'\n';
     for(auto s:vs)
     {
-        cout << "union(union(star(symbol(b)),symbol(a)),union(star(symbol(a)),symbol(b))) \n"<<s<<'\n';
+        if(argc == 1)cout << "union(concat(star(symbol(b)),symbol(a)),union(star(symbol(a)),symbol(b)))" << '\n'<<s<<'\n';
+        else cout << argv[1] << '\n'<<s<<'\n';
     }
 }

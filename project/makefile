@@ -10,3 +10,6 @@ clean:
 
 run: regexMatcher
 	./regexMatcher < run.in > run.out
+
+gener: testGenerator1.cpp
+	g++ -std=c++17 testGenerator1.cpp -o gener

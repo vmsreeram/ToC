@@ -154,6 +154,11 @@ public:
 
             start=newState;
         }
+        else
+        {
+            cerr << "\nERROR\n======\nError : unknown symbol \'"<<parsed[0]<<"\'\n\n\n\n";
+            assert(false);
+        }
     }
     
     void printNFA()
