@@ -383,10 +383,10 @@ public:
 
     DFA(DFA* dfa)
     {
-        cerr << "inside DFA(DFA* dfa)\n";
+        // cerr << "inside DFA(DFA* dfa)\n";
 
         int sz = dfa->States.size();
-        cerr << "sz="<<sz<<"\n";
+        // cerr << "sz="<<sz<<"\n";
 
         vector<vector<bool> > mat(sz,vector<bool>(sz,false));
         map<set<int>,int> set2int;
@@ -396,6 +396,16 @@ public:
             set2int[dfa->States[i]]=i;
             int2set[i]=dfa->States[i];
         }
+        // cout<<"set2int\n------\n";
+        // for(auto pr:set2int)
+        // {
+        //     printState(pr.first);cout<<" --> "<<pr.second<<'\n';
+        // }
+        // cout<<"int2set\n------\n";
+        // for(auto pr:int2set)
+        // {
+        //     printState(pr.second);cout<<" <-- "<<pr.first<<'\n';
+        // }
         for(int i=0;i<sz;i++)
         {
             for(int j=i+1;j<sz;j++)
@@ -410,16 +420,16 @@ public:
                 }
             }
         }
-        cerr << "MAT___1\n";
-        for(int i=0;i<sz;i++)
-        {
-            for(int j=0;j<sz;j++)
-            {
-                cerr << mat[i][j] << ' ';
-            }
-            cerr <<'\n';
-        }
-        cerr<<'\n';
+        // cerr << "MAT___1\n";
+        // for(int i=0;i<sz;i++)
+        // {
+        //     for(int j=0;j<sz;j++)
+        //     {
+        //         cerr << mat[i][j] << ' ';
+        //     }
+        //     cerr <<'\n';
+        // }
+        // cerr<<'\n';
 
         bool ok=true;
         while(ok)
@@ -435,6 +445,7 @@ public:
                         int I,J;
                         I = set2int[dfa->delta[make_pair(int2set[i],ch)]];
                         J = set2int[dfa->delta[make_pair(int2set[j],ch)]];
+                        if(I>J)swap(I,J);   // <<<<<<<<<<<<<<--------------- error corrected here
                         if(mat[I][J]==true)
                         {
                             mat[i][j]=true;
@@ -445,16 +456,16 @@ public:
             }
         }
 
-        cerr << "MAT___2\n";
-        for(int i=0;i<sz;i++)
-        {
-            for(int j=0;j<sz;j++)
-            {
-                cerr << mat[i][j] << ' ';
-            }
-            cerr <<'\n';
-        }
-        cerr<<'\n';
+        // cerr << "MAT___2\n";
+        // for(int i=0;i<sz;i++)
+        // {
+        //     for(int j=0;j<sz;j++)
+        //     {
+        //         cerr << mat[i][j] << ' ';
+        //     }
+        //     cerr <<'\n';
+        // }
+        // cerr<<'\n';
 
         for(int i=0;i<sz;i++)
             make_set(i);
@@ -475,19 +486,19 @@ public:
             clpsd[find_set(i)].insert(i);
         }
 
-        cerr<<"clpsd__\n";
-        for(auto clp:clpsd)
-        {
-            cerr << clp.first << " -=-> ";printState(clp.second); cerr<<'\n';
-        }
-        cerr<<'\n';
+        // cerr<<"clpsd__\n";
+        // for(auto clp:clpsd)
+        // {
+        //     cerr << clp.first << " -=-> ";printState(clp.second); cerr<<'\n';
+        // }
+        // cerr<<'\n';
 
 
         int oldStart = set2int[dfa->start];
-        cerr << "oldStart = "<<oldStart<<'\n';
+        // cerr << "oldStart = "<<oldStart<<'\n';
 
         start = clpsd[find_set(oldStart)];/////////////////////
-        cerr << "start = ";printState(start);cerr<<'\n';
+        // cerr << "start = ";printState(start);cerr<<'\n';
 
         set<int> oldFinals;
         for(auto s:dfa->finals)
@@ -576,12 +587,12 @@ void testcase()
     // _dfa_.printDFA();
     // cout << "$$$$$ \n\n";
     DFA __dfa__(&_dfa_);
-    cout << "_dfa_ \n";
-    _dfa_.printDFA();
-    cout << "$$$$$ \n\n";
-    cout << "__dfa__ \n";
-    __dfa__.printDFA();
-    cout << "$$$$$ \n\n";
+    // cout << "_dfa_ \n";
+    // _dfa_.printDFA();
+    // cout << "$$$$$ \n\n";
+    // cout << "__dfa__ \n";
+    // __dfa__.printDFA();
+    // cout << "$$$$$ \n\n";
 
     // cout << "Num of tests : ";
     int nTests = 1; 
@@ -603,6 +614,7 @@ int main()
 {
     int nt;cin>>nt;while(nt--)
         testcase();
+    // for(auto i: parse("star(symbol(a))"))cout<<i<<' ';
     /**
      
      * @brief Testing
