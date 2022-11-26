@@ -2,7 +2,7 @@
 star(symbol(a))
 aaaa
 concat(star(symbol(b)),symbol(a))
-baa
+bba
 concat(star(symbol(a)),union(symbol(b),symbol(c)))
 aab
 concat(star(union(symbol(a),union(symbol(b),symbol(c)))),symbol(d))

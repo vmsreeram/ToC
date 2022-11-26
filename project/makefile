@@ -12,3 +12,13 @@ run: regexMatcher
 
 gener: testGenerator1.cpp
 	g++ -std=c++17 testGenerator1.cpp -o gener
+
+MYDIR = tests
+test: $(MYDIR)/*
+	@rm -rf testouts
+	@mkdir testouts
+	@mkdir testouts/tests
+	for file in $^ ; do \
+		./regexMatcher < $${file} > testouts/$${file};\
+		echo $${file};\
+	done
