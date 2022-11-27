@@ -1,8 +1,9 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-char alphabet[] = {'a', 'b', 'c', 'd'};
-int N_LETTERS = 4;
+// source : https://stackoverflow.com/a/2381031
+char alphabet[] = {'a', 'b', 'c', 'd'};         /* change as required */
+int N_LETTERS = 4;                              /* change as required */
 
 std::vector<std::string> get_all_words(int length)
 {
@@ -32,7 +33,7 @@ std::vector<std::string> get_all_words(int length)
 int main(int argc, char* argv[])
 {
     vector<string> vs;
-    for(int len=1;len<=6;len++)
+    for(int len=1;len<=6/* change as required */;len++)
         for(auto s:get_all_words(len))
             vs.push_back(s);
 
