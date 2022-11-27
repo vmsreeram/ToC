@@ -610,8 +610,9 @@ void testcase()
         cout << "Yes";
         else
             cout << "No";
-        if(ans == checkString(&_dfa_,s))cout << '\n';
-        else cout <<" <-- Mismatch found\n";
+        // if(ans == checkString(&_dfa_,s))cout << '\n';
+        // else cout <<" <-- Mismatch found\n";
+        cout<<'\n';
     }
 }
 
