@@ -32,7 +32,7 @@ The following is an abstract of what's happening :
 ## Files
 1. [`regexMatcher.cpp`](project/regexMatcher.cpp) is the program that solves the assignment.
 2. [`run.in`](project/run.in) and [`run.out`](project/run.out) are used when `make run` command is used. [`run.in`](project/run.in) is from where input is read from, and the output is written to [`run.out`](project/run.out).
-3. [`Makefile`](project/Makefile) helps to compile the program and run the project.
+3. [`Makefile`](project/makefile) helps to compile the program and run the project.
 4. [`.compareop.sh`](project/.compareop.sh) may be used to compare two output files - corresponding to a single input file - the one to be tested and the correct one. It prints the difference as well as the corresponding input that led to mismatch. See detailed help by passing `-h` option or reading [this](#how-to-use-comparator-to-compare-two-outputs) section.
 5. [`.testGenerator1.cpp`](project/.testGenerator1.cpp) is used to help in generating test files in the required format. Most of the code for this file was adapted from [StackOverflow](https://stackoverflow.com/a/2381031). See [below](#test-generator) for details.
 
