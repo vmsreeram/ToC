@@ -43,6 +43,14 @@ vector<string> parse(string s)
     return t;
 }
 
+string inputformat(string x)
+{
+    if(x.size()==0)return "";
+    char ch = x.back();
+    x.pop_back();
+    return inputformat(x)+(x.size()==0?"":"+")+"symbol("+ch+")";
+}
+
 int nfctr;
 class NFA
 {
@@ -614,6 +622,13 @@ void testcase()
     // cout << "$$$$$ \n\n";
     DFA __dfa__(&_dfa_);
     DFA __dfa__comp(&__dfa__,2);
+    
+    string s; cin>>s;
+    cout << inputformat(s) <<'\n';
+    return;
+    NFA istringonly(inputformat(s));
+    DFA _dfa_istring(&istringonly);
+    DFA __dfa__istring(&_dfa_istring);
     // cout << "_dfa_ \n";
     // _dfa_.printDFA();
     // cout << "$$$$$ \n\n";
@@ -622,14 +637,14 @@ void testcase()
     // cout << "$$$$$ \n\n";
     // cout << "__dfa__comp \n";
     // __dfa__comp.printDFA();
-    // cout << "$$$$$ \n\n";
+    // cout << "$$$$$ \n\n";lI
 
     // cout << "Num of tests : ";
     int nTests = 1; 
     // cin >> nTests;
     while(nTests--) {
         // cout <<'[' << nTests << ']' << " Enter the string to test : ";
-        string s; cin>>s;
+        // string s; cin>>s;
         bool ans = checkString(&__dfa__,s);
         if(ans)
         cout << "Yes";
