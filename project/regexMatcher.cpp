@@ -536,6 +536,27 @@ public:
         }
     }
 
+    DFA(DFA* dfa, int x) // complement
+    {
+        start = dfa->start;
+
+        delta = dfa->delta;
+        Sigma = dfa->Sigma;
+        States = dfa->States;
+        for (auto st:States)
+        {
+            if(dfa->finals.count(st)==0)
+            {
+                finals.insert(st);
+            }
+        }
+        if(finals.size()==0)
+        {
+            set<int> xxxx;
+            finals.insert(xxxx);
+        }
+    }
+
     void printDFA()
     {
         cout << "... [DFA]\n";
@@ -592,11 +613,15 @@ void testcase()
     // _dfa_.printDFA();
     // cout << "$$$$$ \n\n";
     DFA __dfa__(&_dfa_);
+    DFA __dfa__comp(&__dfa__,2);
     // cout << "_dfa_ \n";
     // _dfa_.printDFA();
     // cout << "$$$$$ \n\n";
     // cout << "__dfa__ \n";
     // __dfa__.printDFA();
+    // cout << "$$$$$ \n\n";
+    // cout << "__dfa__comp \n";
+    // __dfa__comp.printDFA();
     // cout << "$$$$$ \n\n";
 
     // cout << "Num of tests : ";
@@ -610,6 +635,11 @@ void testcase()
         cout << "Yes";
         else
             cout << "No";
+        ans = checkString(&__dfa__comp,s);
+        if(ans)
+            cout << " comp=Yes";
+        else
+            cout << " comp=No";
         // if(ans == checkString(&_dfa_,s))cout << '\n';
         // else cout <<" <-- Mismatch found\n";
         cout<<'\n';
